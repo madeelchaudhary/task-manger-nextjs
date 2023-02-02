@@ -10,12 +10,15 @@ const TodoContext = createContext(
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   let data = { todos: [] };
-  const jsonData = localStorage.getItem("data");
 
-  if (jsonData) {
-    data = JSON.parse(jsonData);
-  } else {
-    localStorage.setItem("data", JSON.stringify(data));
+  const ISSERVER = typeof window === "undefined";
+  if (!ISSERVER) {
+    const jsonData = localStorage.getItem("data");
+    if (jsonData) {
+      data = JSON.parse(jsonData);
+    } else {
+      localStorage.setItem("data", JSON.stringify(data));
+    }
   }
 
   const todoHook = useReducer(TodoReducer, data);
